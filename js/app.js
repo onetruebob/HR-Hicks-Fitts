@@ -1,4 +1,9 @@
 $(document).ready(function() {
+  var terms = ["invoke","define","reference","scope","closure","variable","function","funcional",
+                "functional shared","prototypal","pseudoclassical","debugger","linear","polynomial",
+                "logarithmic","break point","bind","call","apply","this","driver","nagivator","pseudocode",
+                "encapsulation","test driven development"];
+
   var $docBody = $(document.body);
   var startTime;
   var finishTime;
@@ -8,8 +13,18 @@ $(document).ready(function() {
     $(template).appendTo($docBody);
   };
 
-  // First page - Welcome
 
+  var generateButtons = function (buttonTerms){
+    debugger;
+    var buttonTemplate = '';
+    _.each(buttonTerms, function (term){
+      buttonTemplate = buttonTemplate + '<button class="basicButton" id="' + 
+                       (term === 'invoke' ? 'target' : '') + '">' + term + '</button><br>\n';
+    });
+    return buttonTemplate;
+  };
+
+  // First page - Welcome
   var welcomeTemplate = ' \
   <h1>Welcome to my demo of Hicks Law & Fitts Law</h1> \
   <button class="basicButton" id="demo-start">Start the Demo</button>';
@@ -23,7 +38,6 @@ $(document).ready(function() {
   };
 
   // Second page - Single Button Test
-
   var singleButtonTestTemplate = ' \
   <h1>Click the &quot;invoke&quot; button</h1> \
   <br><br><br> \
@@ -33,16 +47,15 @@ $(document).ready(function() {
     applyTemplate(singleButtonTestTemplate);
     startTime = (new Date).getTime();
     $('.basicButton').on('click', function(event) {
+      event.preventDefault();
       if ($(this).attr('id') === 'target') {
         finishTime = (new Date).getTime();
-        event.preventDefault();
         setupSingleButtonResults();
       }
     });
   };
 
   // Third page - Single Button Restuls
-
   var singleButtonResultsTemplate = ' \
   <h1>Single Button Test Results</h1> \
   <p>It took you <em><span id="results"></span></em> milliseconds to find and click the button.</p> \
@@ -50,8 +63,47 @@ $(document).ready(function() {
 
   var setupSingleButtonResults = function() {
     applyTemplate(singleButtonResultsTemplate);
-    $('#results').text ('' + (finishTime - startTime)); 
+    $('#results').text('' + (finishTime - startTime));
+    $('#nextTest').on('click', function (event){
+      event.preventDefault();
+      setupRndMultiTermTest();
+    });
   };
 
+
+  // Forth page - Rnd Multi Term Test
+  var rndMultiTermTestTemplate = '<h1>Click the &quot;invoke&quot; button</h1>';
+
+  var setupRndMultiTermTest = function (){
+    var shuffledTerms;
+
+    applyTemplate(rndMultiTermTestTemplate);
+    shuffledTerms = _.shuffle(terms);
+    $(generateButtons(shuffledTerms)).appendTo($docBody)
+    startTime = (new Date).getTime();
+    $('.basicButton').on('click', function (e){
+      e.preventDefault();
+      if($(this).attr('id') === 'target'){
+        finishTime = (new Date()).getTime();
+        setupRndMultiTermResults();
+      }
+    });
+  };
+
+  // Fifth page - Rnd Multi Term Test Result
+  var rndMultiTermResultTemplate = ' \
+  <h1>Random Multi Button Test Results</h1> \
+  <p>It took you <em><span id="results"></span></em> milliseconds to find and click the button.</p> \
+  <button class="basicButton" id="nextTest">Next Test</button>';
+
+  var setupRndMultiTermResults = function (){
+    applyTemplate(rndMultiTermResultTemplate);
+    $('#results').text('' + (finishTime - startTime));
+    $('#nextTest').on('click', function (event){
+      event.preventDefault();
+    });
+  }
+
+  // Start up the app
   setupWelcome();
 });
