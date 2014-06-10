@@ -136,7 +136,7 @@ $(document).ready(function() {
 
   //Seventh page - Grouped Multi Term Test Results
   var rndGroupedMultiTermResultTemplate = ' \
-  <h1>Grouo Multi Button Test Results</h1> \
+  <h1>Grouped Multi Button Test Results</h1> \
   <p>It took you <em><span id="results"></span></em> milliseconds to find and click the button.</p> \
   <button class="basicButton" id="nextTest">Next Test</button>';
 
@@ -145,9 +145,40 @@ $(document).ready(function() {
     $('#results').text('' + (finishTime - startTime));
     $('#nextTest').on('click', function (event){
       event.preventDefault();
-      setupGroupedMultiTermTest();
+      setupAlphaMultiTermTest();
     });
   };
+
+  // Eight page - Alpha Multi Term Test
+  var alphaMultiTermTestTemplate = '<h1>Click the &quot;invoke&quot; button</h1>';
+
+  var setupAlphaMultiTermTest = function (){
+    var sortedTerms;
+
+    applyTemplate(alphaMultiTermTestTemplate);
+    sortedTerms = terms.sort();
+    $(generateButtons(sortedTerms)).appendTo($docBody)
+    startTime = (new Date).getTime();
+    $('.basicButton').on('click', function (e){
+      e.preventDefault();
+      if($(this).attr('id') === 'target'){
+        finishTime = (new Date()).getTime();
+        setupAlphaMultiTermResults();
+      }
+    });
+  };
+
+  //Ninth page - Alpha Multi Term Test Results
+  var alphaMultiTermResultTemplate = ' \
+  <h1>Alphabetic Multi Button Test Results</h1> \
+  <p>It took you <em><span id="results"></span></em> milliseconds to find and click the button.</p> \
+  <p>The End - Reload to play again.</p>';
+
+  var setupAlphaMultiTermResults = function (){
+    applyTemplate(alphaMultiTermResultTemplate);
+    $('#results').text('' + (finishTime - startTime));
+  };
+
 
   // Start up the app
   setupWelcome();
