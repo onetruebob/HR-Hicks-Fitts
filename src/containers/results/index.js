@@ -3,6 +3,7 @@ import { Card, CardTitle, CardText } from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 
 const style = {
     container: {
@@ -25,7 +26,17 @@ class Results extends Component {
     }
 
     render() {
-        return <div>{this.props.results.map(ResultCard)}</div>;
+        return (
+            <div>
+                {this.props.results.map(ResultCard)}
+                <RaisedButton
+                    style={style.container}
+                    label="Start Over"
+                    primary={true}
+                    onClick={_ => this.props.goHome()}
+                />
+            </div>
+        );
     }
 }
 
@@ -33,6 +44,12 @@ const mapStateToProps = state => ({
     results: state.hicksDemo.demoTimings
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(
+        {
+            goHome: () => push('/')
+        },
+        dispatch
+    );
 
 export default connect(mapStateToProps, mapDispatchToProps)(Results);
